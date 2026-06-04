@@ -1,6 +1,6 @@
 name: intent-spec
-version: 1
-description: Intent-spec OpenSpec workflow - proposal -> Gherkin-style specs -> design -> adr -> tasks
+version: 2
+description: Intent-spec OpenSpec workflow - proposal -> Gherkin-style specs -> design -> adr -> tasks -> verify -> retrospective
 artifacts:
   - id: proposal
     generates: proposal.md
@@ -267,6 +267,78 @@ artifacts:
     requires:
       - specs
       - adr
+  - id: verify
+    generates: verify.md
+    description: Post-implementation verification against specs, design, ADRs, and tasks
+    template: verify.md
+    instruction: |
+      Produce verify.md - a self-contained, post-implementation check that the
+      change is complete, valid, and coherent. Requires no external skills or plugins.
+
+      PRECHECK - implementation evidence. Run BOTH; if either returns 0, STOP and
+      tell the user the apply phase has not produced reviewable work yet. This guard
+      also prevents `openspec propose` from emitting verify.md prematurely.
+
+      1. Commits since base (must be > 0):
+         git log --oneline "$(git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main 2>/dev/null)"..HEAD | wc -l
+      2. Completed tasks (must be > 0):
+         grep -c '^- \[x\]' openspec/changes/<change-name>/tasks.md
+
+      Only when both are positive, run these checks and record results in verify.md
+      using the template:
+
+      1. Structural validation: run `openspec validate <change-name> --type change --strict`
+         (and `openspec validate --all --strict` if specs changed). Record pass/fail.
+      2. Task completion: confirm every checkbox in tasks.md is `- [x]`. For any `- [ ]`,
+         document why (manual / out-of-scope / blocked) and whether it blocks archive.
+      3. Delta-spec sync state: for each dir under openspec/changes/<change-name>/specs/,
+         compare against openspec/specs/<capability>/spec.md and record one of:
+         OK synced / NEEDS SYNC (list capabilities) / N/A.
+      4. Design/specs coherence: spot-check that design.md decisions align with the
+         requirements in specs/. Record drift as a non-blocking warning.
+      5. ADR coherence: confirm durable decisions in design.md are captured in
+         docs/adrs/ (a new ADR for this change, or an in-force one). Gaps = warning.
+      6. Implementation committed: confirm `git status --short` is clean; cite the commit range.
+
+      Record an Overall Decision: PASS / PASS WITH WARNINGS / FAIL. verify.md may be
+      re-run; each run overwrites it with current state.
+    requires:
+      - tasks
+  - id: retrospective
+    generates: retrospective.md
+    description: Evidence-first retrospective of the completed change
+    template: retrospective.md
+    instruction: |
+      Write retrospective.md - an evidence-first reflection on the completed change.
+      Self-contained: no external skills required.
+
+      PRECHECK - verify completion. Run both; if either fails, STOP and tell the user
+      that verify must pass first:
+
+      1. verify.md exists:
+         test -f openspec/changes/<change-name>/verify.md
+      2. verify.md Overall Decision is not FAIL:
+         ! grep -q '^- \[x\] FAIL' openspec/changes/<change-name>/verify.md
+
+      Then write the retrospective. Every claim cites a commit hash, file path, test
+      name, or measurable fact:
+
+      Section 0 - Evidence: commit count, diff size (files/lines), tasks-done ratio,
+        OpenSpec validate state at archive, new dependencies, one-line commit chain.
+      Section 1 - Wins: what worked, with evidence.
+      Section 2 - Misses: what did not, marked [blocking] / [painful] / [nit].
+      Section 3 - Plan deviations: tasks whose scope changed, and why.
+      Section 4 - Workflow compliance: did the change follow
+        proposal -> specs -> design -> adr -> tasks -> verify? Note any artifact skipped and why.
+      Section 5 - Surprises: assumptions that turned out wrong.
+      Section 6 - Promote candidates: a `- [ ]` checklist of learnings worth promoting to
+        memory / CLAUDE.md / the schema, each with a `> Why:` and a `> How to apply:` line.
+
+      Trivial single-commit fixes may skip the retrospective with a one-line reason.
+      Do not rewrite a retrospective after the fact; if later facts supersede it, add a
+      dated forward-pointer (preserves the audit trail).
+    requires:
+      - verify
 apply:
   requires:
     - tasks
