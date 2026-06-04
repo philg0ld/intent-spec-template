@@ -12,7 +12,7 @@ and its [intent-driven-template](https://github.com/intent-driven-dev/intent-dri
 ## Workflow
 
 ```text
-proposal -> specs -> design -> adr -> tasks
+proposal -> specs -> design -> adr -> tasks -> verify -> retrospective
 ```
 
 - **proposal** — why the change matters (interrogated with the `grill-me` skill).
@@ -20,6 +20,8 @@ proposal -> specs -> design -> adr -> tasks
 - **design** — implementation approach and trade-offs (C4 diagrams).
 - **adr** — durable architecture decisions, written to `docs/adrs/` so they survive change-archiving.
 - **tasks** — the work, derived from the above.
+- **verify** — self-contained post-implementation check (`openspec validate` + task / spec / ADR coherence) written to `verify.md`.
+- **retrospective** — evidence-first reflection written to `retrospective.md` (the archive-to-knowledge-base record). Both are plugin-independent.
 
 ## Use it
 

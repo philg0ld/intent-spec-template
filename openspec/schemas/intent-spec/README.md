@@ -20,7 +20,7 @@ schema: intent-spec
 ## Stage gates
 
 ```text
-proposal -> specs -> design -> adr -> tasks
+proposal -> specs -> design -> adr -> tasks -> verify -> retrospective
 ```
 
 - `proposal` states why the change matters and lists the capabilities that need behaviour specs.
@@ -28,6 +28,8 @@ proposal -> specs -> design -> adr -> tasks
 - `design` explains the implementation approach and accounts for currently in-force ADRs.
 - `adr` records durable architecture decisions after design and before task planning.
 - `tasks` are planned only after proposal, specs, design, and ADR artifacts are complete.
+- `verify` records a self-contained post-implementation check (validate + task/spec/ADR coherence) in `verify.md`.
+- `retrospective` records an evidence-first reflection in `retrospective.md`, preserved with the archived change.
 
 ## ADR persistence
 
