@@ -1,0 +1,17 @@
+schema: intent-spec
+
+# Optional project context, surfaced into every artifact's enriched instructions:
+#   context: |
+#     Tech stack: ...
+#     Conventions: ...
+#     Domain: ...
+
+rules:
+  proposal:
+    - Must use grill-me skill
+  design:
+    - Must use c4-diagrams skill
+  adr:
+    - Must use architectural-decision-records skill
+  spec:
+    - Must use gherkin-authoring skill
