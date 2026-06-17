@@ -218,7 +218,8 @@ artifacts:
 
       3. For each qualifying decision, create a NEW file at
       docs/adrs/NNNN-kebab-title.md, where NNNN is a 4-digit sequence one
-      greater than the highest existing. Use the template (MADR-short). If
+      greater than the highest existing. Use the Nygard template (Status /
+      Context / Decision / Consequences). If
       this decision replaces a prior in-force ADR, set Status to
       "accepted, supersedes ADR-NNNN", populate the `Supersedes:` field, and
       explain in Context why the prior decision is being revisited. Do NOT
@@ -275,16 +276,15 @@ artifacts:
       Produce verify.md - a self-contained, post-implementation check that the
       change is complete, valid, and coherent. Requires no external skills or plugins.
 
-      PRECHECK - implementation evidence. Run BOTH; if either returns 0, STOP and
-      tell the user the apply phase has not produced reviewable work yet. This guard
-      also prevents `openspec propose` from emitting verify.md prematurely.
+      PRECHECK - implementation evidence. Gate on the workflow's own state (task
+      completion), not on git topology: if 0 tasks are complete, STOP and tell the
+      user the apply phase has not produced reviewable work yet. This guard also
+      prevents `openspec propose` from emitting verify.md prematurely.
 
-      1. Commits since base (must be > 0):
-         git log --oneline "$(git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main 2>/dev/null)"..HEAD | wc -l
-      2. Completed tasks (must be > 0):
+         Completed tasks (must be > 0):
          grep -c '^- \[x\]' openspec/changes/<change-name>/tasks.md
 
-      Only when both are positive, run these checks and record results in verify.md
+      Only when that is positive, run these checks and record results in verify.md
       using the template:
 
       1. Structural validation: run `openspec validate <change-name> --type change --strict`
@@ -298,7 +298,13 @@ artifacts:
          requirements in specs/. Record drift as a non-blocking warning.
       5. ADR coherence: confirm durable decisions in design.md are captured in
          docs/adrs/ (a new ADR for this change, or an in-force one). Gaps = warning.
-      6. Implementation committed: confirm `git status --short` is clean; cite the commit range.
+      6. Implementation committed: confirm `git status --short` is clean and cite the
+         commit range since the integration base. Read the base from
+         openspec/config.yaml `base_branch` (default `main`); never let an unresolved
+         base fail this check:
+           base="$(grep '^base_branch:' openspec/config.yaml | awk '{print $2}')"; base="${base:-main}"
+           mb=$(git merge-base HEAD "origin/$base" 2>/dev/null || git merge-base HEAD "$base" 2>/dev/null || true)
+           [ -n "$mb" ] && git rev-list --count "$mb"..HEAD || echo "commits: N/A (base '$base' unresolved)"
 
       Record an Overall Decision: PASS / PASS WITH WARNINGS / FAIL. verify.md may be
       re-run; each run overwrites it with current state.

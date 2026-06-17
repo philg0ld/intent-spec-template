@@ -13,7 +13,7 @@ Rule: <business rule>
 
 ## MODIFIED Requirements
 
-<!-- Copy the full existing requirement block from openspec/specs/<capability>/spec.md, then edit it so it represents the full desired behaviour after the change. -->
+<!-- copy the FULL existing requirement block, then edit to the desired end state (no partial diffs) -->
 
 ## REMOVED Requirements
 

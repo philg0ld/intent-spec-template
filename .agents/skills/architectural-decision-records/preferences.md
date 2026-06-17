@@ -1,13 +1,13 @@
 # ADR Preferences
 
-preferred-style: unset
+preferred-style: nygard
 
-When `preferred-style` is `unset`, ask the user which ADR style they prefer before drafting an ADR, then update this file with one of:
+intent-spec pins Nygard (Status / Context / Decision / Consequences). ADRs sit
+downstream of design.md, which already records the alternatives considered, so
+Nygard avoids duplicating that analysis. The skill still requires naming the key
+rejected option and why, so ADRs stay self-contained.
 
-- `madr-full`
-- `madr-minimal`
-- `nygard`
-- `y-statement`
-- `custom`
-
-If the user chooses `custom`, record a short note describing the preferred structure.
+The other styles under templates/ (madr-full, madr-minimal, y-statement, custom)
+remain available — change preferred-style here to switch. Do not re-prompt while a
+style is set; do not edit accepted ADRs — supersede them with a new ADR whose
+Supersedes field names the prior one.

@@ -1,17 +1,18 @@
-# NNNN. <Decision title>
+# ADR-NNNN: <Decision title>
 
-- Status: proposed | accepted | accepted, supersedes ADR-XXXX
-- Date: YYYY-MM-DD
-<!-- Supersedes: ADR-XXXX  (include this line only if this ADR replaces a prior in-force ADR; omit otherwise) -->
+- **Status:** Proposed | Accepted | Deprecated | Superseded by ADR-XXXX
+- **Date:** YYYY-MM-DD
+- **Deciders:** <names / teams>
+<!-- - **Supersedes:** ADR-XXXX   (include only when this ADR replaces a prior in-force ADR) -->
 
 ## Context
 
-<!-- Forces at play, constraints, what's prompting this decision. If this ADR supersedes a prior one, explain here why the earlier decision is being revisited; the prior ADR's file is immutable and will not be edited. -->
+<!-- What issue is motivating this decision or change? Forces, constraints. If this supersedes a prior ADR, explain why the earlier decision is revisited; the prior file stays immutable. -->
 
 ## Decision
 
-<!-- The choice being made, stated clearly and unambiguously. -->
+<!-- What change are we proposing or doing? Stated clearly and unambiguously. -->
 
 ## Consequences
 
-<!-- Positive, negative, and neutral consequences. What becomes easier? What becomes harder? -->
+<!-- What becomes easier or harder? Positive, negative, and neutral consequences; follow-up work. -->

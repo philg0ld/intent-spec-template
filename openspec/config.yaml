@@ -1,5 +1,9 @@
 schema: intent-spec
 
+# Integration base branch for the commit-range evidence in verify (default main).
+# Override per consuming repo on rollout (e.g. develop for git-flow repos).
+base_branch: main
+
 # Optional project context, surfaced into every artifact's enriched instructions:
 #   context: |
 #     Tech stack: ...
