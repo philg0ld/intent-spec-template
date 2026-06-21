@@ -21,7 +21,12 @@ without explaining the conflict and getting approval.
 3. Copy from this template if absent in the target:
    - `openspec/schemas/intent-spec/`
    - `openspec/config.yaml` (or merge: set `schema: intent-spec` and add the `rules:` block)
-   - `.agents/skills/` (the 5 workflow skills)
+   - `.agents/skills/` (all 6 workflow skills: `adversarial-authoring`,
+     `architectural-decision-records`, `c4-diagrams`, `gherkin-authoring`,
+     `grill-me`, `openspec-git-discipline`)
+   - `.claude/commands/opsx/` template-specific commands not produced by
+     `openspec init`: `adversarial.md`, `retrospective.md`, `verify.md`
+     (`explore`/`propose`/`apply`/`archive` come from step 2; the full set is 7)
    - `docs/adrs/0001-record-architecture-decisions.md` (only if `docs/adrs/` is empty)
 4. Recreate skill symlinks: for each dir in `.agents/skills/`, create
    `.claude/skills/<name>` -> `../../.agents/skills/<name>`.
